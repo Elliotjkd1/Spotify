@@ -4,8 +4,14 @@ import requests
 from dotenv import load_dotenv
 
 
+# --MAIN FUNCTION--
+def main():
+    getArtistData(artistID, token)
+
+
 def getAuth():
     # Load environment variables from .env file
+    # Retrieve authorization token using client ID and secret from environment variables
     load_dotenv()
     client_id = os.getenv("CLIENT_ID")
     client_secret = os.getenv("CLIENT_SECRET")
@@ -31,11 +37,12 @@ def getAuth():
         exit(1)
 
 
-def getArtistData(token):
-    # url endpoint
+def getArtistData(artistID, token):
+    # Retrieve and print artist data using the provided artist ID and token
+    # URL endpoint
     # https://developer.spotify.com/documentation/web-api/reference/get-an-artist
-    artistUrl = "https://api.spotify.com/v1/artists/699OTQXzgjhIYAHMy9RyPD"
-    # token auth
+    artistUrl = "https://api.spotify.com/v1/artists/" + artistID
+    # Token auth
     headers = {
         "Authorization": "Bearer " + token
     }
@@ -51,10 +58,43 @@ def getArtistData(token):
         print("Failed to retrieve artist data.")
 
 
-def main():
-    getArtistData(token)
+def searchArtist(artist, token):
+    # Search for an artist using the provided artist name and token
+    # Connect to spotify search api
+    searchUrl = "https://api.spotify.com/v1/search"
+    headers = {
+        "Authorization": "Bearer " + token
+    }
+    params = {
+        "q": artist,
+        "type": "artist",
+        "limit": 1
+    }
+
+    response = requests.get(searchUrl, headers=headers, params=params)
+    responseData = response.json()
+
+    if "artists" in responseData and "items" in responseData["artists"]:
+        artists = responseData["artists"]["items"]
+        if artists:
+            return artists[0]["id"]  # Return the ID of the first matching artist
+        else:
+            print("No artist found with the given name:" + artist)
+    else:
+        print("Failed to retrieve artist data.")
+    return None
 
 
+def getUserArtistSelection():
+    # get user artist input and return it
+    userSelection = input("ENTER IN ARTIST HERE: ")
+    return userSelection
+
+
+# --MAIN CODE--
 token = getAuth()
+artist = getUserArtistSelection()
+artistID = searchArtist(artist, token)
+
 if __name__ == "__main__":
     main()
