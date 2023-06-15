@@ -6,7 +6,9 @@ from dotenv import load_dotenv
 
 # --MAIN FUNCTION--
 def main():
-    getArtistData(artistID, token)
+    getArtistStats(artistID, token)
+    getArtistTopTrack(artistID, token)
+
 
 
 def getAuth():
@@ -37,7 +39,7 @@ def getAuth():
         exit(1)
 
 
-def getArtistData(artistID, token):
+def getArtistStats(artistID, token):
     # Retrieve and print artist data using the provided artist ID and token
     # URL endpoint
     # https://developer.spotify.com/documentation/web-api/reference/get-an-artist
@@ -83,6 +85,35 @@ def searchArtist(artist, token):
     else:
         print("Failed to retrieve artist data.")
     return None
+
+
+def getArtistTopTrack(artistID, token):
+    country = input("Enter the country code (e.g., US): ")
+    url = f"https://api.spotify.com/v1/artists/{artistID}/top-tracks"
+    headers = {
+        "Authorization": "Bearer " + token
+    }
+    params = {
+        "country": country
+    }
+    print("URL:", url)
+
+    response = requests.get(url, headers=headers, params=params)
+
+    if response.status_code == 200:
+        data = response.json()
+        #recive and print top tracks
+        if "tracks" in data:
+            top_tracks = data["tracks"]
+            for track in top_tracks:
+                print("Track Name:", track["name"])
+                print("Artist:", track["artists"][0]["name"])
+                print("Preview URL:", track["preview_url"])
+                print("")
+    else:
+        print("Failed to retrieve top tracks.")
+        print("Status Code:", response.status_code)
+        print("Response Content:", response.content)
 
 
 def getUserArtistSelection():
