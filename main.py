@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 
 # --MAIN FUNCTION--
 def main():
+    getUserProfile(token)
     getArtistStats(artistID, token)
     getArtistTopTrack(artistID, token)
-
 
 
 def getAuth():
@@ -102,7 +102,7 @@ def getArtistTopTrack(artistID, token):
 
     if response.status_code == 200:
         data = response.json()
-        #recive and print top tracks
+        # recive and print top tracks
         if "tracks" in data:
             top_tracks = data["tracks"]
             for track in top_tracks:
@@ -120,6 +120,25 @@ def getUserArtistSelection():
     # get user artist input and return it
     userSelection = input("ENTER IN ARTIST HERE: ")
     return userSelection
+
+
+def getUserProfile(token):
+    username = input("Enter your Spotify username: ")
+    url = f"https://api.spotify.com/v1/users/{username}"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        profile_data = response.json()
+        # Access and print user profile information
+        print("Display Name:", profile_data.get("display_name"))
+        print("Followers:", profile_data.get("followers").get("total"))
+        print("Profile Image:", profile_data.get("images")[0].get("url"))
+    else:
+        print("Failed to retrieve user profile.")
 
 
 # --MAIN CODE--
