@@ -146,5 +146,8 @@ token = getAuth()
 artist = getUserArtistSelection()
 artistID = searchArtist(artist, token)
 
+
 if __name__ == "__main__":
     main()
+
+
