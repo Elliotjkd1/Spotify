@@ -9,6 +9,14 @@
 </head>
 <body>
     <div><h1>Spotify Stats</h1></div>
-    <p>Authorization code: {{ code }} </p>
+    <p>Your Top Tracks</p>
+    <ol>
+        {% for track in user_top_tracks %}
+        <li>
+            <img src="{{ track["album"]["images"][-1]["url"] }}" width="64" height="64" >
+            {{ track["name"] }} by {% for artist in track["artists"] %} {{ artist["name"] }} {% endfor %}
+        </li>
+        {% endfor %}
+    </ol>
 </body>
 </html>

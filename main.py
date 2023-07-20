@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 
 # --MAIN FUNCTION--
 def main():
-    getUserProfile(token)
     getArtistStats(artistID, token)
     getArtistTopTrack(artistID, token)
 
