@@ -20,7 +20,7 @@ def getAuth(code):
         "form": {
             "code": code,
             "grant_type": "authorization_code",
-            "redirect_uri": "http://localhost:3000/home"
+            "redirect_uri": "http://localhost:3000/tracks"
         },
         "json": True
     }
@@ -53,13 +53,13 @@ def get_user_top_tracks(auth_token):
         print("Response Content:", response.content)
 
 
-home = Blueprint(__name__, "home")
+tracks = Blueprint(__name__, "tracks")
 
 
 # route is designed to handle a web request
-@home.route("/")
-def homeRoute():
+@tracks.route("/")
+def tracksRoute():
     code = request.args.get('code')
     auth_token = getAuth(code)
     user_top_tracks = get_user_top_tracks(auth_token)
-    return render_template("home.html", code=code, auth_token=auth_token, user_top_tracks=user_top_tracks)
+    return render_template("tracks.html", code=code, auth_token=auth_token, user_top_tracks=user_top_tracks)
